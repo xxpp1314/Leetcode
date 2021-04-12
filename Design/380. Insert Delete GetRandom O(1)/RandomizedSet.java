@@ -1,0 +1,50 @@
+class RandomizedSet {
+  Map<Integer, Integer> dict;
+  List<Integer> list;
+  Random rand = new Random();
+
+  /** Initialize your data structure here. */
+  public RandomizedSet() {
+    dict = new HashMap();
+    list = new ArrayList();
+  }
+
+  /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+  public boolean insert(int val) {
+    if (dict.containsKey(val)) return false;
+
+    dict.put(val, list.size());
+    list.add(list.size(), val);
+    return true;
+  }
+
+  /** Removes a value from the set. Returns true if the set contained the specified element. */
+  public boolean remove(int val) {
+    if (! dict.containsKey(val)) return false;
+
+    // move the last element to the place idx of the element to delete
+    int lastElement = list.get(list.size() - 1);
+    int idx = dict.get(val);
+    list.set(idx, lastElement);
+    dict.put(lastElement, idx);
+    // delete the last element
+    list.remove(list.size() - 1);
+    dict.remove(val);
+    return true;
+  }
+
+  /** Get a random element from the set. */
+  public int getRandom() {
+    return list.get(rand.nextInt(list.size()));
+  }
+}
+//idea: HashMap + ArrayList
+//时间复杂度：getRandom 时间复杂度为 O(1)，insert 和 remove 平均时间复杂度为 O(1)，在最坏情况下为O(N) 当元素数量超过当前分配的动态数组和哈希表的容量导致空间重新分配时。
+//空间复杂度：O(N)，在动态数组和哈希表分别存储了 N 个元素的信息
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
